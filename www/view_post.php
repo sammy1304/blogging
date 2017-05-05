@@ -29,7 +29,8 @@
 				<thead>
 					<tr>
 						<th>Post id</th>
-						<th>post</th>
+						<th>Title</th>
+						<th>Post</th>
 						<th>Edit</th>
 						<th>Delete</th>
 						<th>Archive</th>

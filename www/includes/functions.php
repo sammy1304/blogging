@@ -87,8 +87,10 @@
 			$stmt->execute();
 
 			while ($row = $stmt->fetch(PDO::FETCH_BOTH)) {
-				$result .= '<tr><td>'.$row[0].'</td><td>'.$row[1].'</td>
-				<td><a href="edit.php?post_id='.$row[0].'">edit</a></td>
+				$result .= '<tr><td>'.$row[0].'</td>'.
+							'<td>'.$row[1].'</td>'.
+							'<td>'.$row[3].'</td>'.
+				'<td><a href="edit.php?post_id='.$row[0].'">edit</a></td>
 				<td><a href="delete.php?post_id='.$row[0].'">delete</a></td>
 				<td><a href="archive.php?post_id='.$row[0].'">archive</a></td></tr>';
 			}
@@ -144,6 +146,16 @@
 			return $row;
 		}
 
+		 function getAdminByID($dbconn, $adminid) {
+			$stmt = $dbconn->prepare("SELECT * FROM admin WHERE admin_id=:aid");
+			$stmt->bindParam(":aid", $adminid);
+			$stmt->execute();
+
+			$row = $stmt->fetch(PDO::FETCH_BOTH);
+
+			return $row;
+		}
+
 		 function updatePost($dbconn, $input) {
 			$stmt = $dbconn->prepare("UPDATE post SET title=:name WHERE post_id=:postid");
 
@@ -172,6 +184,54 @@
 	    
 
 		    }
+
+
+		    function displayarchive($dbconn){
+		             $result = "";
+
+		              $stmt = $dbconn->prepare("SELECT DISTINCT DATE_FORMAT(date,'%M,%Y') AS d,post_id FROM archive");
+				
+			         $stmt->execute();
+		        
+		        while($row = $stmt->fetch(PDO::FETCH_BOTH)){
+
+				       $post = getPostById($dbconn,$row['post_id']);
+				       
+				      $result .= '<li><a href="homepage.php?date='.$post['date'].'">'.$row['d'].'</a></li>';
+                          
+   		            }
+		            
+		        return $result;
+	
+	        }
+
+
+	        	function displayPost($dbconn){
+		$result = "";
+
+		$stmt = $dbconn->prepare("SELECT title,user_id,post,DATE_FORMAT(date,'%M %e, %Y') AS d FROM post");
+		$stmt->execute();
+		while ($row = $stmt->fetch(PDO::FETCH_BOTH)){
+
+			   $item = getAdminByID($dbconn,$row['user_id']);
+
+
+/*			$result .= '<div class="blog-post">
+            			<h2 class="blog-post-title">'.$row['title'].'</h2>
+            			<p class="blog-post-meta">'.$row['d'].' by <a href="#">'.$item['firstname'].'</a></p>
+            			<p clas="blog-post">'.$row['post'].'</p></div>';		*/
+
+
+            $result .= 	'<h2 class="blog-post-title">'.$row['title'].'</h2>'.
+            '<p class="blog-post-meta">'.$row['d'].'<a href="#">'.$item['firstname'].' '.$item['lastname'].'</a></p>'.
+            '<p>'.$row['post'].'</p>';
+
+			
+		}
+
+		return $result;
+		
+	}
 	
 
 

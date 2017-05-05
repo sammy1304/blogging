@@ -37,7 +37,7 @@
 			$clean['pid'] = $postID;
 
 			# do update..
-			updateCategory($conn, $clean);
+			updatePost($conn, $clean);
 
 			# redirect..
 			#Utils::redirect("view_category.php", "");

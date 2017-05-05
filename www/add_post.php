@@ -1,7 +1,8 @@
 <?php
 	session_start();
+
 	$aid = $_SESSION['admin_id'];
-	$pid = $_SESSION['post_id'];
+	//	$pid = $_SESSION['post_id'];
 
 	# title
 	$title = "Blog: Add Post";
@@ -39,7 +40,7 @@
 		if(empty($errors)) {
 			$clean = array_map('trim', $_POST);
 			
-		addPost($conn, $clean, $aid, $pid);
+		addPost($conn, $clean, $aid);
 
 		}
 
